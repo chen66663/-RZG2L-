@@ -1,0 +1,44 @@
+# Secrets
+asr_credentials.json
+*.pem
+*.key
+*.crt
+
+# Local logs and private notes
+asr_conversation_summary.txt
+*.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Build outputs
+asr_test
+asr_test_host
+*.o
+*.so
+*.a
+
+# Local C experiment files, not part of the Python GitHub project
+Makefile
+asr_test.c
+
+# Local audio/test data
+*.wav
+*.mp3
+*.m4a
+*.aac
+*.flac
+*.ogg
+*.amr
+
+# Editor and OS files
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
