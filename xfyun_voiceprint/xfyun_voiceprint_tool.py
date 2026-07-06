@@ -8,7 +8,7 @@ import os
 import subprocess
 import sys
 
-from asr_tool.xfyun_voiceprint import (
+from xfyun_voiceprint import (
     DEFAULT_GROUP_ID,
     DEFAULT_THRESHOLD,
     create_feature,

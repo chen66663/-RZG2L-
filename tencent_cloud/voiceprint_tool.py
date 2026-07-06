@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""腾讯云声纹注册和说话人认证旧/备用命令行入口。"""
+"""腾讯云声纹注册和说话人认证命令行入口。"""
 
 from __future__ import annotations
 
@@ -39,7 +39,7 @@ def parse_args() -> argparse.Namespace:
     add_credential_args(credential_parser)
 
     parser = argparse.ArgumentParser(
-        description="Legacy/fallback Tencent Cloud voiceprint enroll/verify tool",
+        description="Tencent Cloud voiceprint enroll/verify tool",
         parents=[credential_parser],
     )
 
