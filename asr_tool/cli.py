@@ -61,9 +61,23 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--speaker-diarization",
         type=int,
-        choices=[0, 1],  # 0 表示关闭，1 表示开启说话人分离
+        choices=[0, 1, 3],  # 0 关闭，1 普通说话人分离，3 腾讯云角色分离
         default=None,  # 不传就不向腾讯云发送这个字段
-        help="0 disables speaker split, 1 enables it",
+        help="0 disables speaker split, 1 enables it, 3 enables Tencent Cloud role separation",
+    )
+    parser.add_argument(
+        "--speaker-label",
+        action="append",
+        default=[],
+        metavar="ID=NAME",
+        help="Friendly speaker label, for example: --speaker-label 0=Alice",
+    )
+    parser.add_argument(
+        "--speaker-role",
+        action="append",
+        default=[],
+        metavar="NAME=URL",
+        help="Known speaker role audio URL for --speaker-diarization 3; example: --speaker-role Alice=https://...",
     )
     parser.add_argument(
         "--speaker-number",
@@ -107,6 +121,29 @@ def validate_args(args: argparse.Namespace) -> None:
 
     if args.speaker_number not in (None, 0) and args.engine_model.startswith("16k_"):
         raise ValueError("16k models do not support a fixed --speaker-number.")  # 16k 模型不支持固定人数
+
+    if args.speaker_diarization == 3 and args.engine_model != "16k_zh_en":
+        raise ValueError("--speaker-diarization 3 only supports --engine-model 16k_zh_en.")
+
+    if args.speaker_role and args.speaker_diarization != 3:
+        raise ValueError("--speaker-role requires --speaker-diarization 3.")
+
+    if len(args.speaker_role) > 1:
+        raise ValueError("Tencent Cloud role separation currently supports one --speaker-role.")
+
+    for label in args.speaker_label:
+        if "=" not in label:
+            raise ValueError("--speaker-label must use ID=NAME, for example 0=Alice.")
+        speaker_id, name = label.split("=", 1)
+        if not speaker_id.strip() or not name.strip():
+            raise ValueError("--speaker-label must include both speaker ID and name.")
+
+    for role in args.speaker_role:
+        if "=" not in role:
+            raise ValueError("--speaker-role must use NAME=URL, for example Alice=https://...")
+        role_name, audio_url = role.split("=", 1)
+        if not role_name.strip() or not audio_url.strip():
+            raise ValueError("--speaker-role must include both role name and audio URL.")
 
 
 def load_credentials(args: argparse.Namespace) -> Credentials:

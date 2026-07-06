@@ -13,6 +13,20 @@ from .api import call_api
 from .common import FILE_SIZE_LIMIT, Credentials
 
 
+def parse_speaker_roles(items: list[str]) -> list[dict[str, str]]:
+    """解析腾讯云角色分离的声纹参考音频配置。"""
+    roles: list[dict[str, str]] = []
+    for item in items:
+        role_name, audio_url = item.split("=", 1)
+        roles.append(
+            {
+                "RoleName": role_name.strip(),
+                "RoleAudioUrl": audio_url.strip(),
+            }
+        )
+    return roles
+
+
 def read_audio_file(path_text: str) -> bytes:
     """读取并检查本地音频文件。"""
     audio_path = Path(path_text)  # 把字符串路径转成 Path 对象，方便判断和读取
@@ -35,6 +49,8 @@ def build_create_task_payload(args: argparse.Namespace) -> dict[str, Any]:
     }
     if args.speaker_diarization is not None:
         payload["SpeakerDiarization"] = args.speaker_diarization  # 是否开启说话人分离
+    if args.speaker_role:
+        payload["SpeakerRoles"] = parse_speaker_roles(args.speaker_role)  # 已知角色声纹参考音频
     if args.speaker_number is not None:
         payload["SpeakerNumber"] = args.speaker_number  # 预期说话人数，部分模型才支持
     if args.callback_url:

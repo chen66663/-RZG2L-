@@ -1,5 +1,7 @@
 # Secrets
 asr_credentials.json
+xfyun_credentials.json
+private/
 *.pem
 *.key
 *.crt
@@ -28,6 +30,8 @@ Makefile
 asr_test.c
 
 # Local audio/test data
+audio/
+generated/
 *.wav
 *.mp3
 *.m4a

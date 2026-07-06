@@ -1,1 +1,1 @@
-"""Tencent Cloud ASR helper package."""
+"""Tencent Cloud ASR and iFLYTEK voiceprint helper package."""
